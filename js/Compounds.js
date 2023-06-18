@@ -44,7 +44,7 @@ AFRAME.registerComponent("atoms", {
     marker.setAttribute("type", "barcode");
     marker.setAttribute("element_name", elementName);
     marker.setAttribute("value", barcodeValue);
-    marker.setAttribute("MarkerHandler",{});
+    marker.setAttribute("markerhandler",{});
 
     scene.appendChild(marker);
 

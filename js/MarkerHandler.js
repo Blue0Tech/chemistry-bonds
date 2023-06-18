@@ -3,10 +3,9 @@ var B = ['F','Cl','Br','I'];
 var C = ['O','S','Se'];
 var elementsArray = [];
 
-AFRAME.registerComponent('MarkerHandler',{
+AFRAME.registerComponent('markerhandler',{
     init: async function() {
-        console.log('init');
-        var compounds = this.getCompounds();
+        var compounds = await this.getCompounds();
         this.el.addEventListener('markerFound',()=>{
             var elementName = this.el.getAttribute('element_name');
             var barcodeValue = this.el.getAttribute('value');
@@ -23,7 +22,7 @@ AFRAME.registerComponent('MarkerHandler',{
         });
         this.el.addEventListener('markerLost',()=>{
             var elementName = this.el.getAttribute('element_name');
-            var i = elementsArray.findIndex(elementName);
+            var i = elementsArray.findIndex(name => name.element_name === elementName);
             if(i>-1) {
                 elementsArray.splice(i,1);
             }
@@ -64,23 +63,21 @@ AFRAME.registerComponent('MarkerHandler',{
         elementsArray.map(item=>{
             var el = document.querySelector(`#${item.element_name}-${item.barcodeValue}`);
             el.setAttribute('visible',false); // hide element
-            var compound = document.querySelector(`#${compound.name}-${compound.value}`);
-            compound.setAttribute('visible',true); // show compound
+            var compoundEl = document.querySelector(`#${compound.name}-${compound.value}`);
+            compoundEl.setAttribute('visible',true); // show compound
         });
     },
     tick: function() {
-        console.log(elementsArray);
         if(elementsArray.length > 1) {
-            var length = elementsArray.length;
+            var length = elementsArray.length;;
             var distance = null;
             var message = document.querySelector('#messageText');
             var compound = this.getCompound();
-            console.log(length);
             if(length === 2) {
                 var marker1 = document.querySelector(`#marker-${elementsArray[0].barcodeValue}`);
                 var marker2 = document.querySelector(`#marker-${elementsArray[1].barcodeValue}`);
                 distance = this.getDistance(marker1,marker2);
-                if(distance < 1.25) {
+                if(distance < 2.25) {
                     if(compound != undefined) {
                         this.showCompound(compound);
                     } else {
